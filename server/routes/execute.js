@@ -12,11 +12,7 @@ router.get("/check", (req, res) => {
   });
 });
 
-router.post("/run", (req, res) => {
 
-   // pura run wala code
-
-});
 
 router.post("/run", (req, res) => {
   const { code, language, input } = req.body;
