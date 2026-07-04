@@ -5,11 +5,19 @@ const { exec } = require("child_process");
 const { randomUUID } = require("crypto");
 
 const router = express.Router();
+
 router.get("/check", (req, res) => {
   exec("g++ --version", (err, stdout, stderr) => {
     res.send(stdout || stderr || err?.message);
   });
 });
+
+router.post("/run", (req, res) => {
+
+   // pura run wala code
+
+});
+
 module.exports = router;
 
 router.post("/run", (req, res) => {
