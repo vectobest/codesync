@@ -115,16 +115,11 @@ socket.on("video-answer", (data) => {
 });
 
 // Forward ICE Candidate
-socket.on("ice-candidate", async ({ candidate }) => {
-  if (!candidate || !peerConnection.current) return;
-
-  try {
-    await peerConnection.current.addIceCandidate(
-      new RTCIceCandidate(candidate)
-    );
-  } catch (err) {
-    console.log("ICE Error:", err);
-  }
+socket.on("ice-candidate", (data) => {
+  io.to(data.to).emit("ice-candidate", {
+    candidate: data.candidate,
+    from: socket.id,
+  });
 });
 
     // ================= CHAT =================

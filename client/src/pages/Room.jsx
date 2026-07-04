@@ -69,7 +69,7 @@ function Room() {
     if (!aiPrompt) return;
     try {
       setAiLoading(true);
-     const res = await api.post("/api/ai",{
+     const res = await api.post("/ai",{
         prompt: aiPrompt,
         code: files[currentFile].code,
         language,
@@ -85,7 +85,7 @@ function Room() {
 
   const saveProject = async () => {
     if (!projectName) return alert("Enter Project Name");
-    await api.post("/api/save-project", {
+    await api.post("/save-project", {
       name: projectName,
       roomId,
       language,
@@ -237,7 +237,7 @@ function Room() {
     setStatus("running");
     try {
       const startTime = performance.now();
-      const res = await api.post("/api/run",{
+      const res = await api.post("/run",{
         code: files[currentFile].code,
         language,
         input,
