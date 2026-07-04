@@ -18,8 +18,6 @@ router.post("/run", (req, res) => {
 
 });
 
-module.exports = router;
-
 router.post("/run", (req, res) => {
   const { code, language, input } = req.body;
 
