@@ -61,7 +61,7 @@ function Room() {
 
   const deleteProject = async (id) => {
     if (!window.confirm("Delete this project?")) return;
-    await api.delete(`/api/project/${id}`);
+    await api.delete(`/project/${id}`);
     loadProjects();
   };
 
@@ -96,7 +96,7 @@ function Room() {
   };
 
   const loadProjects = async () => {
-    const res = await api.get( "/api/projects");
+    const res = await api.get( "/projects");
     setProjects(res.data);
   };
 
