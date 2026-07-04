@@ -1,14 +1,18 @@
 require("dotenv").config();
-console.log(process.env.GEMINI_API_KEY);
-const aiRoute =require("./routes/aiRoute");
+
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const { Server } = require("socket.io");
+
 const executeRoute = require("./routes/execute");
 const projectRoutes = require("./routes/projectRoutes");
+const aiRoute = require("./routes/aiRoute");
+
 const app = express();
+
+// ================= Middleware =================
 
 app.use(
   cors({
@@ -16,23 +20,40 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
+
+// ================= MongoDB =================
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() =>
-    console.log("MongoDB Connected")
-  )
-  .catch(console.error);
+  .then(() => {
+    console.log("✅ MongoDB Connected");
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB Error:", err);
+  });
 
-app.use("/api", executeRoute);
-app.use("/api", projectRoutes);
+// ================= Debug =================
 
-// Debug Middleware
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
+
+// ================= Routes =================
+
+app.use("/api", executeRoute);
+app.use("/api", projectRoutes);
+app.use("/api/ai", aiRoute);
+
+// ================= Root =================
+
+app.get("/", (req, res) => {
+  res.send("Backend Running v2");
+});
+
+// ================= Server =================
 
 const server = http.createServer(app);
 
@@ -46,12 +67,8 @@ const io = new Server(server, {
 
 require("./socket/socketHandler")(io);
 
-// Test Route
-app.get("/", (req, res) => {
-  res.send("Backend Running...");
-});
-app.use("/api/ai", aiRoute);
-// Error Handler
+// ================= Error Handler =================
+
 app.use((err, req, res, next) => {
   console.error("SERVER ERROR:", err);
 
@@ -60,15 +77,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT =
-  process.env.PORT || 5001;
+// ================= Start =================
+
+const PORT = process.env.PORT || 5001;
 
 server.listen(PORT, () => {
+  console.log(`🚀 Server Running On Port ${PORT}`);
   console.log(
-    `🚀 Server Running On Port ${PORT}`
+    "API KEY:",
+    process.env.GEMINI_API_KEY?.slice(0, 10)
   );
 });
-console.log(
-  "API KEY:",
-  process.env.GEMINI_API_KEY?.slice(0,10)
-);
