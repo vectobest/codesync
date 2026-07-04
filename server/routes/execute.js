@@ -5,6 +5,11 @@ const { exec } = require("child_process");
 const { randomUUID } = require("crypto");
 
 const router = express.Router();
+router.get("/check", (req, res) => {
+  exec("g++ --version", (err, stdout, stderr) => {
+    res.send(stdout || stderr || err?.message);
+  });
+});
 
 router.post("/run", (req, res) => {
   const { code, language, input } = req.body;
@@ -25,7 +30,7 @@ router.post("/run", (req, res) => {
       fs.writeFileSync(inputFile, input || "");
 
       exec(
-        `clang++ -std=c++17 "${cppFile}" -o "${exeFile}" && "${exeFile}" < "${inputFile}"`,
+        `g++ -std=c++17 "${cppFile}" -o "${exeFile}" && "${exeFile}" < "${inputFile}"`,
         (error, stdout, stderr) => {
 
           [cppFile, exeFile, inputFile].forEach((file) => {
