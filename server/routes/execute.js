@@ -10,6 +10,7 @@ router.get("/check", (req, res) => {
     res.send(stdout || stderr || err?.message);
   });
 });
+module.exports = router;
 
 router.post("/run", (req, res) => {
   const { code, language, input } = req.body;
